@@ -13,16 +13,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     permissions:
+      contents: none
       pull-requests: none
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
       - name: fail to view PR
         run: gh pr list --repo ${{ github.repository }} --state all --limit 100
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: fail to create PR
-        run: gh pr create --repo ${{ github.repository }} --title "test" --body "test" --head test-branch --base main || echo "failed as expected"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: test
