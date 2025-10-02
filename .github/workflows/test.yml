@@ -18,7 +18,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
       - name: fail to view PR
-        run: gh pr view 1
+        run: gh pr list --repo ${{ github.repository }} --state all --limit 100
         env:
           GH_TOKEN: ${{ github.token }}
       - name: test
