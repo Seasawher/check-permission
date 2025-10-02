@@ -20,7 +20,7 @@ jobs:
       - name: fail to view PR
         run: gh pr list --repo ${{ github.repository }} --state all --limit 100
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: test
         uses: ./
         with:
