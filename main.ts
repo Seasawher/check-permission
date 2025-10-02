@@ -2,43 +2,45 @@ import * as core from '@actions/core';
 
 const GITHUB_TOKEN = Deno.env.get('GITHUB_TOKEN') ?? '';
 
-function hasPRWritePermission(): boolean {
-  if (!GITHUB_TOKEN) {
-    core.debug('GITHUB_TOKEN is not available.');
-    return false;
-  }
+type Permission = 'none' | 'read' | 'write';
 
+function getPRPermissionLevel(): Permission {
   const rawPermissions = Deno.env.get('GITHUB_TOKEN_PERMISSIONS');
   if (!rawPermissions) {
     core.debug('GITHUB_TOKEN_PERMISSIONS is not defined.');
-    return false;
+    return 'none';
   }
 
   try {
     const permissions = JSON.parse(rawPermissions) as Record<string, string>;
+    core.info(`Parsed GITHUB_TOKEN_PERMISSIONS: ${JSON.stringify(permissions)}`);
     const pullRequestPermission =
       permissions['pull_requests'] ?? permissions['pull-requests'];
 
     if (!pullRequestPermission) {
-      return false;
+      return 'none';
     }
 
-    const normalized = pullRequestPermission.toLowerCase();
-    return normalized === 'write' || normalized === 'admin';
+    const normalized = pullRequestPermission.trim().toLowerCase();
+    if (normalized === 'write' || normalized === 'admin' || normalized === 'maintain') {
+      return 'write';
+    }
+
+    if (normalized === 'read' || normalized === 'triage') {
+      return 'read';
+    }
+
+    return 'none';
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     core.warning(`Unable to parse GITHUB_TOKEN_PERMISSIONS: ${message}`);
-    return false;
+    return 'none';
   }
 }
 
 function run () {
-  const hasPermission = hasPRWritePermission();
-  if (!hasPermission) {
-    core.info("This GitHub Action does not have write permission for pull requests.");
-    // does nothing. simply exits with code 0.
-    return 0;
-  }
+  const permission = getPRPermissionLevel();
+  core.info(`Pull Request permission level: ${permission}`);
 }
 
 run();
