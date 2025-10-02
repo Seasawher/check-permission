@@ -3,6 +3,13 @@ description: >
   A GitHub Action to create a pull request.
   This is needed because we don't want to raise an error
   if the GitHub token doesn't have permission to create a PR.
+
+inputs:
+  github-token:
+    description: "Token to call GitHub API"
+    required: false
+    default: ${{ secrets.GITHUB_TOKEN }}
+
 runs:
   using: "composite"
   steps:
@@ -13,5 +20,5 @@ runs:
     - name: run action
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
       run: deno run --quiet --allow-all main.ts
