@@ -36,7 +36,7 @@ function run () {
   const hasPermission = hasPRWritePermission();
   if (!hasPermission) {
     core.info("This GitHub Action does not have write permission for pull requests.");
-    // does nothing
+    // does nothing. simply exits with code 0.
     return 0;
   }
 }
