@@ -1,13 +1,19 @@
-name: "create pull request"
+name: "check permission action"
 description: >
-  A GitHub Action to create a pull request.
-  This is needed because we don't want to raise an error
-  if the GitHub token doesn't have permission to create a PR.
+  A GitHub Action to check workflow permissions.
 
 inputs:
   github-token:
     description: "Token to call GitHub API"
     required: false
+    default: ${{ github.token }}
+
+outputs:
+  pull-request:
+    description: >
+      permission on pull requests
+      This will be `write` or `read` or `none`.
+    value: ${{ steps.check-permission.outputs.pull-request }}
 
 runs:
   using: "composite"
