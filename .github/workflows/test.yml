@@ -23,6 +23,12 @@ jobs:
         run: gh pr list --repo ${{ github.repository }} --state all --limit 100
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: fail to create PR
+        run: |
+          git branch test
+          git checkout test
+          git commit --allow-empty -m "test"
+          gh pr create --repo ${{ github.repository }} --title "test" --body "test" --head test --base main
       - name: test
         uses: ./
         with:
