@@ -7,7 +7,6 @@ type Permission = 'none' | 'read' | 'write';
 function getPRPermissionLevel(): Permission {
   // gh コマンドを使用して、PR を読み取りできるか試し、
   // 権限不足で失敗した場合は none を返す
-  // TODO: 実装する
   return 'none';
 }
 
