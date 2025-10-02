@@ -1,0 +1,17 @@
+name: "create pull request"
+description: >
+  A GitHub Action to create a pull request.
+  This is needed because we don't want to raise an error
+  if the GitHub token doesn't have permission to create a PR.
+runs:
+  using: "composite"
+  steps:
+    - name: setup deno
+      uses: denoland/setup-deno@v2
+      with:
+        deno-version: v2.x
+    - name: run action
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: deno run --quiet --allow-all main.ts
