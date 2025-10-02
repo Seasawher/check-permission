@@ -7,7 +7,7 @@ type Permission = 'none' | 'read' | 'write';
 function getPRPermissionLevel(): Permission {
   const rawPermissions = Deno.env.get('GITHUB_TOKEN_PERMISSIONS');
   if (!rawPermissions) {
-    core.debug('GITHUB_TOKEN_PERMISSIONS is not defined.');
+    core.info('GITHUB_TOKEN_PERMISSIONS is not defined.');
     return 'none';
   }
 
